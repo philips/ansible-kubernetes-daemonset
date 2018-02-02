@@ -1,0 +1,37 @@
+---
+- hosts: coreos
+  gather_facts: False
+  roles:
+    - defunctzombie.coreos-bootstrap
+
+  vars: 
+    message: "Hello World"
+
+  tasks:
+    - name: Create a test file
+      copy:
+        content: "Hello World"
+        dest: /home/core/test
+
+    - name: Check the file
+      stat:
+        path: /home/core/test
+        checksum_algorithm: sha256
+
+    - name: Print test file
+      shell: cat /home/core/test
+      register: test
+
+    - debug: msg="{{ test.stdout | quote }}"
+
+    - name: Make sure a service is running
+      systemd: state=started name=docker
+
+    - name: Check service that doesn't exist
+      systemd: state=started name=muffins
+      register: need_muffins
+      ignore_errors: True
+
+    - name: just force systemd to reread configs (2.4 and above)
+      systemd: daemon_reload=yes
+      when: need_muffins | failed

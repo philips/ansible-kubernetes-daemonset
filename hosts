@@ -1,0 +1,5 @@
+[coreos]
+/media/root
+
+[coreos:vars]
+ansible_python_interpreter=/root/bin/python

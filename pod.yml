@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ansible
+spec:
+    containers:
+    - name: ansible
+      image: quay.io/philips/ansible:4
+      command: ["/usr/local/bin/ansible-playbook", "-c", "chroot", "-i", "/etc/ansible/hosts", "/etc/ansible/site.yml"]
+
+      # TODO: Create a wrapper that will take check and diff as an environment variable or something
+      #command: ["/usr/local/bin/ansible-playbook", "-c", "chroot", "-i", "/etc/ansible/hosts", "/etc/ansible/site.yml", "--check", "--diff"]
+
+      securityContext:
+        runAsUser: 0
+        privileged: true
+      volumeMounts:
+      - mountPath: /media/root
+        name: root
+      - mountPath: /etc/ansible
+        name: site
+      - mountPath: /tmp
+        name: tmp
+    volumes:
+    - name: root
+      hostPath:
+        path: /
+        type: Directory
+    - name: tmp
+      emptyDir: {}
+    - name: site
+      projected:
+        sources:
+        - configMap:
+            name: ansible
+            items:
+              - key: site.yml
+                path: site.yml
+        - configMap:
+            name: ansible
+            items:
+              - key: ansible.cfg
+                path: ansible.cfg
+        - configMap:
+            name: ansible
+            items:
+              - key: hosts
+                path: hosts
