@@ -10,14 +10,12 @@ Ansible gets its configuration from `site.yml` and which is loaded into a config
 
 **Background**
 
-[See exploration doc](https://docs.google.com/a/coreos.com/document/d/1Tbiy4ssIDzQYl8krAKiKFOMYXKnr7yqPVH5oFdsTmt0/edit?usp=drive_web)
-
-Ansible might be desirable on Tectnoic for a number of reasons:
+Ansible might be desirable on Kubernetes for a number of reasons:
 
 - Leverages existing software and modules in the ecosystem
 - Ansible's DSL is simple enough to map from ignition config or equivalent used for first boot
 - Debugging tools exist for Ansible include check and diff functionality
-- Could be used for other non-Tectonic cluster maintenance by customers [like sysctl](http://docs.ansible.com/ansible/latest/sysctl_module.html)
+- Could be used for other non-automated cluster maintenance by customers [like sysctl](http://docs.ansible.com/ansible/latest/sysctl_module.html)
   - Related [field request](https://jira.coreos.com/browse/FR-163)
 
 This was tested on Tectonic 1.7.9 cluster.
